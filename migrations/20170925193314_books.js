@@ -7,7 +7,8 @@ exports.up = function(knex, Promise) {
     table.string('genre').notNullable().defaultTo('');
     table.text('description').notNullable().defaultTo('');
     table.text('cover_url').notNullable().defaultTo('');
-    table.timestamps(true, true);
+    table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
     })
 };
 
