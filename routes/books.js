@@ -118,28 +118,6 @@ router.patch('/books/:id', function(req, res, next) {
     })
 })
 
-
-// router.delete('/books/:id', function(req, res, next) {
-//   let delItem = req.params.id
-//   knex('books')
-//     .del()
-//     .where('id', delItem)
-//     .then((rowsAffected) => {
-//       if (rowsAffected !== 1) {
-//         return res.sendStatus(404)
-//       }
-//       console.log('you deleted', delItem)
-//       console.log(rowsAffected)
-//       res.setHeader('Content-Type', 'application/json')
-//       res.send(JSON.stringify(rowsAffected[0]))
-//
-//       // res.sendStatus(200)
-//     })
-//     .catch((err) => next(err))
-// })
-
-
-
 router.delete('/books/:id', (req, res, next) => {
   let book;
 
