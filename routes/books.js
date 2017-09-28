@@ -119,22 +119,55 @@ router.patch('/books/:id', function(req, res, next) {
 })
 
 
-router.delete('/books/:id', function(req, res, next) {
-  let delItem = req.params.id
-  knex('books')
-    .del()
-    .where('id', delItem)
-    .then((rowsAffected) => {
-      if (rowsAffected !== 1) {
-        return res.sendStatus(404)
-      }
-      console.log('you deleted', delItem)
-      console.log(rowsAffected)
-      res.setHeader('Content-Type', 'application/json')
-      res.send(JSON.stringify(rowsAffected[0]))
+// router.delete('/books/:id', function(req, res, next) {
+//   let delItem = req.params.id
+//   knex('books')
+//     .del()
+//     .where('id', delItem)
+//     .then((rowsAffected) => {
+//       if (rowsAffected !== 1) {
+//         return res.sendStatus(404)
+//       }
+//       console.log('you deleted', delItem)
+//       console.log(rowsAffected)
+//       res.setHeader('Content-Type', 'application/json')
+//       res.send(JSON.stringify(rowsAffected[0]))
+//
+//       // res.sendStatus(200)
+//     })
+//     .catch((err) => next(err))
+// })
 
-      // res.sendStatus(200)
+
+
+router.delete('/books/:id', (req, res, next) => {
+  let book;
+
+  knex('books')
+    .where('id', req.params.id)
+    .first()
+    .then((row) => {
+      if (!row) {
+        return next();
+      }
+      book = row;
+      return knex('books')
+        .del()
+        .where('id', req.params.id);
     })
-    .catch((err) => next(err))
-})
+    .then(() => {
+      delete book.id;
+      let deletedBook = {
+        author: book.author,
+        genre: book.genre,
+        title: book.title,
+        coverUrl: book.cover_url,
+        description: book.description
+      }
+      res.send(deletedBook);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
 module.exports = router;
