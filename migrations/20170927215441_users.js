@@ -5,7 +5,7 @@ exports.up = function(knex, Promise) {
     table.string('first_name',255).notNullable().defaultTo('')
     table.string('last_name',255).notNullable().defaultTo('')
     table.string('email',255).notNullable().unique()
-    table.specificType('hashed_password','character').notNullable()
+    table.specificType('hashed_password','char(60)').notNullable()
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
   })
