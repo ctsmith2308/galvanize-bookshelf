@@ -8,7 +8,6 @@ const router = express.Router();
 
 // YOUR CODE HERE
 
-
 router.post('/users', function(req, res, next){
   const{password, firstName, lastName, email} = req.body
     bcrypt.hash(password, 3, function(err, hash){
