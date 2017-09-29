@@ -24,7 +24,6 @@ router.get('/token', function(req, res, next){
 
 router.post('/token', function(req, res, next) {
   if (!req.body.password || !req.body.email) res.sendStatus(400)
-  let user;
   knex('users')
     .where({
       email: req.body.email
@@ -34,7 +33,7 @@ router.post('/token', function(req, res, next) {
     .then(function(data) {
       if(!data){
         res.status(400)
-        res.setHeader('Content-type' ,'text/plain')
+        res.setHeader('Content-type', 'text/plain')
         res.send('Bad email or password')
       }
       else if (bcrypt.compareSync(req.body.password, data.hashed_password)) {

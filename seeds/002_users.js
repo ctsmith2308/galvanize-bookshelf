@@ -19,15 +19,3 @@ exports.seed = function(knex, Promise) {
       return knex.raw("SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));");
     });
 };
-
-
-
-
-// knex('users')
-// .insert({
-//   password:password,
-//   first_name:first_name,
-//   last_name:last_name,
-//   hashed_password:hashed_password,
-//   emai
-// })
