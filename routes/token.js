@@ -4,7 +4,9 @@ const express = require('express');
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-Parser')
 const knex = require('../knex')
-const SECRET = 'mySecret'
+// const SECRET = 'mySecret'
+const SECRET = process.env.JWT_KEY
+
 const bcrypt = require('bcrypt')
 // eslint-disable-next-line new-cap
 const router = express.Router();
@@ -37,7 +39,7 @@ router.post('/token', function(req, res, next) {
         res.send('Bad email or password')
       }
       else if (bcrypt.compareSync(req.body.password, data.hashed_password)) {
-        let token = jwt.sign(data.id, SECRET);
+        let token = jwt.sign({userId:data.id}, SECRET);
         res.cookie('token', token, {httpOnly:true} )
         res.send({id: data.id, email: data.email, firstName: data.first_name, lastName: data.last_name})
       } else {
