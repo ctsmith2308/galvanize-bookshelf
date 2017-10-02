@@ -22,9 +22,9 @@ const auth = function(req, res, next) {
     if (err) {
       return next(boom.create(401, "Unauthorized"))
     }
-    console.log("this is the payload", payload);
+    // console.log("this is the payload", payload);
     req.claim = payload
-    console.log('this is the number', req.claim);
+    // console.log('this is the number', req.claim);
     next()
   })
 }
@@ -44,13 +44,11 @@ router.get('/favorites', auth, function(req, res, next) {
 
 router.post('/favorites', auth, function(req, res, next) {
   // console.log('req.claim.user_id')
-
   const newFav = {
     user_id: req.claim.userId,
     book_id: req.body.bookId
   }
-
-  console.log(newFav.user_id);
+  // console.log(newFav.user_id);
   knex('favorites')
     .insert(newFav, '*')
     .where('favorites.book_id', req.query.bookId)
@@ -66,6 +64,7 @@ router.post('/favorites', auth, function(req, res, next) {
       next(err);
     });
 })
+
 router.get('/favorites/check', auth, function(req, res, next) {
   // let searchQuery = req.query.bookId
   knex('favorites')
@@ -82,5 +81,34 @@ router.get('/favorites/check', auth, function(req, res, next) {
     })
 })
 
+router.delete('/favorites', auth, function(req, res, next) {
+  let delItem = req.body.bookId
+  console.log('this is the id to delete', delItem);
+  let book;
+  knex('favorites')
+  // console.log(favorites);
+  // console.log(favorites.id)
+    .where('favorites.book_id', req.body.bookId)
+    .then((item) => {
+      if (!item) {
+        return next()
+      }
+      book = item
+      return knex('favorites')
+        .del()
+        .where('favorites.id', req.body.bookId)
+        .then(() => {
+
+          let deletedBook = {
+            userId: book[0].user_id,
+            bookId: book[0].book_id
+          }
+          res.send(deletedBook);
+        })
+        .catch((err) => {
+          next(err);
+        })
+    })
+})
 
 module.exports = router;
